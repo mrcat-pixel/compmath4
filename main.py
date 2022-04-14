@@ -142,7 +142,7 @@ def prompt():
             else:
                 try:
                     compute(list_of_tuples)
-                except DivisionByZero:
+                except ZeroDivisionError:
                     print("The Lagrange polynom is impossible to compute for this set of points.")
 
         elif inp == "d":
