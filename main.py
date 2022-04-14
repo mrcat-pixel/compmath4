@@ -1,6 +1,7 @@
 import re
 import matplotlib.pyplot as plt
 import operator as op
+import numpy as np
 
 
 def print_line():
@@ -74,15 +75,42 @@ def polynom_to_str(pol):
     return ret
 
 
+def edges(lst):
+    max = lst[0][0]
+    min = lst[0][0]
+    for i in lst:
+        if i[0] > max:
+            max = i[0]
+        if i[0] < min:
+            min = i[0]
+    return (min, max)
+
+
+def plot(pol, lab, min, max):
+    x = np.linspace(min, max, 1000)
+    y = x*0
+    for i in range(len(pol)):
+        y += pol[i] * (x**(len(pol)-i-1))
+    
+    plt.plot(x,y, 'r', label=lab)
+    plt.legend(loc='upper left')
+
+
 def compute(lst):
     plt.title("Lagrange polynomial")
-    plt.scatter(*zip(*lst))
     pol = generate_polynomial(lst)
 
     print_line()
     print("The polynom formula is:")
-    print(polynom_to_str(pol))
+    str = polynom_to_str(pol)
+    print(str)
     print_line()
+    edge = edges(lst)
+
+    plot(pol, str, edge[0], edge[1])
+    plt.scatter(*zip(*lst))
+
+    plt.show()
 
 
 def prompt():
