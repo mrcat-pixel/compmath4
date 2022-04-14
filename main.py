@@ -24,7 +24,7 @@ def print_help():
 def print_err():
     print("Incorrect command. To see the list of commands, type \"h\".")
 
-# multiplies polynom by ax + b, takes the polynom coefs and (a, b)
+# multiplies polynomial by ax + b, takes the polynomial coefs and (a, b)
 def compute_multi(arr, pair):
     if len(arr) == 0:                               # if empty:
         return [pair[0], pair[1]]                   #   return ax+b
@@ -34,7 +34,7 @@ def compute_multi(arr, pair):
     
     return list(map(op.add, multi1, multi2))        # adds two together
 
-# builds the basis polynom, takes the list of points and i
+# builds the basis polynomial, takes the list of points and i
 def generate_basis_poly(lst, i):
     ret = []                                        # coef array
     xi = lst[i][0]
@@ -43,15 +43,15 @@ def generate_basis_poly(lst, i):
         ret = compute_multi(ret, (1/(xi-xj), -xj/(xi-xj)))
     return ret
 
-# basis polynom sum, takes the list of points
+# basis polynomial sum, takes the list of points
 def generate_polynomial(lst):
-    ret = generate_basis_poly(lst, 0)               # gen the polynom
-    ret = [a * lst[0][1] for a in ret]              # multiply the first basis polynom
+    ret = generate_basis_poly(lst, 0)               # gen the polynomial
+    ret = [a * lst[0][1] for a in ret]              # multiply the first basis polynomial
     for i in range(1, len(lst)):
 
-        newarr = generate_basis_poly(lst, i)        # gen the polynom
-        newarr = [a * lst[i][1] for a in newarr]    # multiply the basis polynom
-        ret = list(map(op.add, ret, newarr))        # adds the basis polynom to the result
+        newarr = generate_basis_poly(lst, i)        # gen the polynomial
+        newarr = [a * lst[i][1] for a in newarr]    # multiply the basis polynomial
+        ret = list(map(op.add, ret, newarr))        # adds the basis polynomial to the result
 
     return ret
 
@@ -102,7 +102,7 @@ def compute(lst):
     pol = generate_polynomial(lst)
 
     print_line()
-    print("The polynom formula is:")
+    print("The polynomial formula is:")
     str = polynom_to_str(pol)
     print(str)
     print_line()
@@ -143,7 +143,7 @@ def prompt():
                 try:
                     compute(list_of_tuples)
                 except ZeroDivisionError:
-                    print("The Lagrange polynom is impossible to compute for this set of points.")
+                    print("The Lagrange polynomial is impossible to compute for this set of points.")
 
         elif inp == "d":
             list_of_tuples = []
@@ -157,7 +157,7 @@ def prompt():
 
 
 def main():
-    print("Welcome to Lagrange polynomial calculator. To see the list of commands, type \"h\". To quit, type \"q\".")
+    print("Welcome to the Lagrange polynomial calculator. To see the list of commands, type \"h\". To quit, type \"q\".")
     print_line()
     prompt()
 
