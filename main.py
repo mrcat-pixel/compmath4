@@ -23,11 +23,14 @@ def print_help():
 def print_err():
     print("Incorrect command. To see the list of commands, type \"h\".")
 
+
 def add_arrs(arr1, arr2):
     return list(map(op.add, arr1, arr2))
 
+
 def multiply_arr(arr, coef):
     return [a * coef for a in arr]
+
 
 # multiplies polynomial by ax + b, takes the polynomial coefs and (a, b)
 def compute_multi(arr, pair):
@@ -39,6 +42,7 @@ def compute_multi(arr, pair):
     
     return add_arrs(multi1, multi2)                 # adds two together
 
+
 # builds the basis polynomial, takes the list of points and i
 def generate_basis_poly(lst, i):
     ret = []                                        # coef array
@@ -47,6 +51,7 @@ def generate_basis_poly(lst, i):
         xj = lst[j][0]
         ret = compute_multi(ret, (1/(xi-xj), -xj/(xi-xj)))
     return ret
+
 
 # basis polynomial sum, takes the list of points
 def generate_polynomial(lst):
