@@ -1,3 +1,4 @@
+from decimal import DivisionByZero
 import re
 import matplotlib.pyplot as plt
 import operator as op
@@ -60,7 +61,7 @@ def frm(num):
 
 
 def polynom_to_str(pol):
-    ret = "y = "
+    ret = "y ="
     for i in range(0, len(pol)):
         if pol[i] >= 0:
             ret += " + "
@@ -122,7 +123,7 @@ def prompt():
             print("")
             break
 
-        if re.match(r"^-?\d+ -?\d+$", inp):
+        if re.match(r"^-?\d+.?\d* -?\d+.?\d*$", inp):
             list_of_tuples.append(tuple(map(float, inp.split())))
 
         elif inp == "h":
@@ -131,14 +132,18 @@ def prompt():
         elif inp == "v":
             print_line()
             print("The points are:")
-            print(list_of_tuples)
+            for a in list_of_tuples:
+                print("x = " + frm(a[0]) + "; y = " + frm(a[1]) + ";")
             print_line()
 
         elif inp == "c":
             if len(list_of_tuples) < 2:
                 print("You need to input at least two points to compute.")
             else:
-                compute(list_of_tuples)
+                try:
+                    compute(list_of_tuples)
+                except DivisionByZero:
+                    print("The Lagrange polynom is impossible to compute for this set of points.")
 
         elif inp == "d":
             list_of_tuples = []
