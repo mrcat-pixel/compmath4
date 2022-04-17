@@ -12,6 +12,11 @@ def print_help():
     print_line()
     print("Command list:\n"
           "0 0 -- add point (input two numbers separated by spaces);\n"
+          "x 0 -- calculate the y value of a generated function in a coordinate;\n"
+          "o 0 -- add a graph as overlay; the argument is an id meaning:")
+    for i in range(1, 5):
+        print("     " + str(i) + ": " + get_add_func_label(i))
+    print("     0: remove the graph\n"
           "d -- delete all points;\n"
           "v -- view the entered points;\n"
           "c -- calculate the polynomial;\n"
@@ -79,7 +84,7 @@ def polynom_to_str(pol):
             ret += " - "
         ret += frm(abs(pol[i]))
         if i < len(pol)-1:
-            ret += "*x"
+            ret += "x"
             power = len(pol) - i - 1
             if power > 1:
                 ret += "^" + str(power)
@@ -97,27 +102,42 @@ def edges(lst):
     return (min, max)
 
 
-def plot(pol, lab, min, max):
+def plot(pol, lab, min, max, id):
     plt.title("Lagrange polynomial")
     x = np.linspace(min, max, 1000)
     y = x*0
     for i in range(len(pol)):
         y += pol[i] * (x**(len(pol)-i-1))
+
+    if id == 1:
+        y2 = x - 3
+    elif id == 2:
+        y2 = 2*x**2 - 4*x + 2
+    elif id == 3:
+        y2 = 7*x**3 - 2*x**2 + 3*x - 2
+    elif id == 4:
+        y2 = np.sin(x)
+    elif id == 5:
+        y2 = 4**x
     
-    plt.plot(x,y, 'r', label=lab)
+    lab2 = get_add_func_label(id)
+    
+    plt.plot(x, y,  'r', label=lab)
+    if id >= 1 and id <= 5:
+        plt.plot(x, y2, 'k:', label=lab2)
     plt.legend(loc='upper left')
 
 
-def compute(lst):
+def compute(lst, id):
     if len(lst) < 2:
         print("You need to input at least two points to compute.")
-        return
+        return []
     
     try:
         pol = generate_polynomial(lst)
     except ZeroDivisionError:
         print("The Lagrange polynomial is impossible to compute for this set of points.")
-        return
+        return []
 
     print_line()
     print("The polynomial formula is:")
@@ -126,9 +146,11 @@ def compute(lst):
     print_line()
 
     edge = edges(lst)
-    plot(pol, str, edge[0], edge[1])
+    plot(pol, str, edge[0], edge[1], id)
     plt.scatter(*zip(*lst))
     plt.show()
+
+    return pol
 
 
 def display(lst):
@@ -139,8 +161,34 @@ def display(lst):
     print_line()
 
 
+def calc_y(coefs, x):
+    if len(coefs) == 0:
+        print("Please generate the polynomial first.")
+        return
+    print("The polynomial is: " + polynom_to_str(coefs))
+    y = 0
+    for i in range(len(coefs)):
+        y += coefs[i] * (x**(len(coefs)-i-1))
+    print("For x = " + frm(x) + " y = " + frm(y))
+
+
+def get_add_func_label(id):
+    if id == 1:
+        return "y = x - 3"
+    elif id == 2:
+        return "y = 2x^2 - 4x + 2"
+    elif id == 3:
+        return "y = 7x^3 - 2x^2 + 3x - 2"
+    elif id == 4:
+        return "y = sin(x)"
+    elif id == 5:
+        return "y = 4^x"
+
+
 def prompt():
     point_lst = []
+    coefs = []
+    id = 0
     while 1:
         try:
             inp = input(">")
@@ -150,12 +198,20 @@ def prompt():
 
         if re.match(r"^-?\d+.?\d* -?\d+.?\d*$", inp):
             point_lst.append(tuple(map(float, inp.split())))
+        elif re.match(r"^x -?\d+.?\d*$", inp):
+            calc_y(coefs, float(inp.split()[1]))
+        elif re.match(r"^o [0-5]$", inp):
+            id = int(inp.split()[1])
+            if id > 0:
+                print("Added " + get_add_func_label(id) + " to the graph.")
+            else:
+                print("Removed the additional function from the graph.")
         elif inp == "h":
             print_help()
         elif inp == "v":
             display(point_lst)
         elif inp == "c":
-            compute(point_lst)
+            coefs = compute(point_lst, id)
         elif inp == "d":
             point_lst = []
         elif inp == "q":
