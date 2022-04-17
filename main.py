@@ -11,9 +11,9 @@ def print_line():
 def print_help():
     print_line()
     print("Command list:\n"
-          "0 0 -- add point (input two numbers separated by spaces);\n"
-          "x 0 -- calculate the y value of a generated function in a coordinate;\n"
-          "o 0 -- add a graph as overlay; the argument is an id meaning:")
+          "[x] [y] -- add point (input two numbers separated by spaces);\n"
+          "x [x] -- calculate the y value of a generated function in a coordinate;\n"
+          "o [id] -- add a graph as overlay; the argument is an id meaning:")
     for i in range(1, 5):
         print("     " + str(i) + ": " + get_add_func_label(i))
     print("     0: remove the graph\n"
